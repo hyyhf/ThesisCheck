@@ -43,7 +43,7 @@ frontend/dist/
 *~
 *.sublime-project
 *.sublime-workspace
-
+.agent/
 # ========================================
 # OS generated files
 # ========================================
