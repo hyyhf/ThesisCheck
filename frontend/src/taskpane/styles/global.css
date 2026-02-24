@@ -1,0 +1,93 @@
+/* ThesisCheck Global Styles */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --tc-bg-primary: #f9fafb;
+  --tc-bg-surface: #ffffff;
+  --tc-border-subtle: rgba(226, 232, 240, 0.5);
+  --tc-text-primary: #18181b;
+  --tc-text-secondary: #71717a;
+  --tc-text-muted: #a1a1aa;
+  --tc-accent: #0078d4;
+  --tc-error: #c62828;
+  --tc-warning: #f57c00;
+  --tc-success: #388e3c;
+  --tc-radius-md: 8px;
+  --tc-radius-lg: 12px;
+  --tc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --tc-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--tc-bg-primary);
+  color: var(--tc-text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--tc-text-muted);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tc-text-secondary);
+}
+
+/* Animated fade-in for streaming results */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeSlideIn 0.3s ease-out forwards;
+}
+
+/* Severity badge colors */
+.severity-error {
+  color: var(--tc-error);
+  background: rgba(198, 40, 40, 0.08);
+}
+
+.severity-warning {
+  color: var(--tc-warning);
+  background: rgba(245, 124, 0, 0.08);
+}
+
+.severity-suggestion {
+  color: var(--tc-success);
+  background: rgba(56, 142, 60, 0.08);
+}
