@@ -63,3 +63,13 @@ class OverallCommentExportRequest(BaseModel):
 
     comment_text: str
     document_title: str
+
+
+class RewriteRequest(BaseModel):
+    """Request body for rewrite endpoint."""
+
+    original_text: str
+    requirement: str
+    api_key: str
+    base_url: str
+    model_name: str

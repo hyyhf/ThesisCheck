@@ -386,3 +386,72 @@ async def generate_overall_comment_stream(
 
     # Signal completion
     yield {"event": "done", "data": "{}"}
+
+
+async def rewrite_text_stream(
+    original_text: str,
+    requirement: str,
+    api_key: str,
+    base_url: str,
+    model_name: str,
+) -> AsyncGenerator[dict, None]:
+    """Rewrite selected text in academic style with streaming output.
+
+    Args:
+        original_text: The original text fragment to rewrite.
+        requirement: User's rewrite instructions/requirements.
+        api_key: User's API key.
+        base_url: Base URL for the API.
+        model_name: Model name to use.
+
+    Yields:
+        Dict with 'event' and 'data' keys for SSE.
+    """
+    client = AsyncOpenAI(api_key=api_key, base_url=base_url)
+
+    system_prompt = (
+        "你是一位资深的学术论文写作专家，擅长将文本改写为规范、专业的学术语言。\n"
+        "请根据用户的改写需求，对给定的文本片段进行改写。\n\n"
+        "改写要求:\n"
+        "1. 保持原文的核心含义不变\n"
+        "2. 使用学术化、规范化的表达方式\n"
+        "3. 确保逻辑清晰、语句通顺\n"
+        "4. 适当提升专业术语的使用\n"
+        "5. 保持段落结构的完整性\n\n"
+        "重要: 只输出改写后的文本内容，不要包含说明、解释或其他元信息。"
+    )
+
+    user_prompt = f"原文:\n{original_text}\n\n改写需求:\n{requirement}"
+
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt},
+    ]
+
+    try:
+        response = await client.chat.completions.create(
+            model=model_name,
+            messages=messages,
+            temperature=0.4,
+            stream=True,
+        )
+
+        async for chunk in response:
+            delta = chunk.choices[0].delta
+            if delta.content:
+                yield {
+                    "event": "text",
+                    "data": json.dumps({"content": delta.content}),
+                }
+
+    except Exception as e:
+        logger.error("Text rewrite failed: %s", e)
+        yield {
+            "event": "error",
+            "data": json.dumps(
+                {"message": f"改写出错: {str(e)}"}
+            ),
+        }
+
+    # Signal completion
+    yield {"event": "done", "data": "{}"}

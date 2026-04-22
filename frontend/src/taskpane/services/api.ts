@@ -210,3 +210,50 @@ export function startOverallCommentStream(
 
     return controller;
 }
+
+/**
+ * Start a streaming rewrite session using SSE.
+ * Returns an AbortController for cancellation.
+ */
+export function startRewriteStream(
+    settings: Settings,
+    originalText: string,
+    requirement: string,
+    callbacks: {
+        onText: (text: string) => void;
+        onError: (message: string) => void;
+        onDone: () => void;
+    },
+): AbortController {
+    const controller = new AbortController();
+
+    (async () => {
+        try {
+            const response = await fetch(`${settings.backendUrl}/api/rewrite/stream`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    original_text: originalText,
+                    requirement,
+                    api_key: settings.apiKey,
+                    base_url: settings.baseUrl,
+                    model_name: settings.modelName,
+                }),
+                signal: controller.signal,
+            });
+
+            if (!response.ok) {
+                callbacks.onError(`HTTP ${response.status}: ${response.statusText}`);
+                return;
+            }
+
+            processSSEStream(response, callbacks);
+        } catch (err) {
+            if ((err as Error).name !== "AbortError") {
+                callbacks.onError((err as Error).message || "Network error");
+            }
+        }
+    })();
+
+    return controller;
+}

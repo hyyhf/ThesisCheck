@@ -1,5 +1,5 @@
 /**
- * Header component with navigation between Review and Settings pages.
+ * Header component with navigation between Rewrite, Review and Settings pages.
  */
 
 import {
@@ -9,11 +9,12 @@ import {
 import {
     DocumentSearchRegular,
     SettingsRegular,
+    TextEditStyleRegular,
 } from "@fluentui/react-icons";
 
 interface HeaderProps {
-    activePage: "review" | "settings";
-    onPageChange: (page: "review" | "settings") => void;
+    activePage: "rewrite" | "review" | "settings";
+    onPageChange: (page: "rewrite" | "review" | "settings") => void;
 }
 
 export function Header({ activePage, onPageChange }: HeaderProps) {
@@ -31,10 +32,13 @@ export function Header({ activePage, onPageChange }: HeaderProps) {
             <TabList
                 className="min-w-0"
                 selectedValue={activePage}
-                onTabSelect={(_, data) => onPageChange(data.value as "review" | "settings")}
+                onTabSelect={(_, data) => onPageChange(data.value as "rewrite" | "review" | "settings")}
                 size="small"
                 appearance="subtle"
             >
+                <Tab value="rewrite" icon={<TextEditStyleRegular />}>
+                    <span className="text-[13px] font-medium tracking-tight">改写</span>
+                </Tab>
                 <Tab value="review" icon={<DocumentSearchRegular />}>
                     <span className="text-[13px] font-medium tracking-tight">评审</span>
                 </Tab>
