@@ -136,6 +136,7 @@ async def review_paragraphs(
             messages=messages,
             response_format={"type": "json_object"},
             temperature=0.3,
+            extra_body={"thinking": {"type": "disabled"}}
         )
         content = response.choices[0].message.content or ""
         comments = extract_comments_from_json(content)
@@ -167,6 +168,7 @@ async def _stream_single_batch(
         response_format={"type": "json_object"},
         temperature=0.3,
         stream=True,
+        extra_body={"thinking": {"type": "disabled"}}
     )
 
     buffer = ""
@@ -365,6 +367,7 @@ async def generate_overall_comment_stream(
             messages=messages,
             temperature=0.4,
             stream=True,
+            extra_body={"thinking": {"type": "disabled"}}
         )
 
         async for chunk in response:
@@ -434,6 +437,7 @@ async def rewrite_text_stream(
             messages=messages,
             temperature=0.4,
             stream=True,
+            extra_body={"thinking": {"type": "disabled"}}
         )
 
         async for chunk in response:
